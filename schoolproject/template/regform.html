@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Application Form</title>
+</head>
+<body>
+<h2>Person Form</h2>
+    <br/>
+    <br/>
+{% include 'messages.html' %}
+ <form method="post" id="personForm" data-course-url="{% url 'schoolapp:ajax_load_course' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+     Materials:
+     <input type="checkbox" value="Paper">Paper
+     <input type="checkbox" value="Pencil">Pencil
+     <input type="checkbox" value="cheque">Cheque <br>
+
+     <input type="submit" value="Submit">
+     <a class="btn btn-info" href="">Logout</a>
+</form>
+{% for msg in messages %}
+<h2>{{msg}}</h2>
+{% endfor %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $("#id_department").change(function () {
+        const url = $("#personForm").attr("data-course-url");  // get the url of the `load_cities` view
+        const departmentId = $(this).val();  // get the selected country ID from the HTML input
+
+        $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+            data: {
+                'department_id': departmentId       // add the country id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_cities` view function
+                $("#id_course").html(data);  // replace the contents of the city input with the data that came from the server
+                /*
+
+                let html_data = '<option value="">---------</option>';
+                data.forEach(function (city) {
+                    html_data += `<option value="${course.id}">${course.name}</option>`
+                });
+                console.log(html_data);
+                $("#id_course").html(html_data);
+
+                */
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
